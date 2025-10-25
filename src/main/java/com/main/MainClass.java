@@ -51,6 +51,7 @@ import edu.util.fileprocess.CSVReaderWriter;
 
 import static com.config.Config.rootDir;
 import static com.unity.testsmell.SmellAnalysisMngr.*;
+import static java.lang.System.exit;
 
 public class MainClass {
 
@@ -97,7 +98,7 @@ public class MainClass {
             ProjectLoader projloader = new ProjectLoader();
             projloader.LoadDownloadProjects();
             System.out.println("Download Projects->Completed");
-
+            exit(0);
         }
 //        else if (inputid == 2) {
 //			CommitAnalysisMngr commitmngr = new CommitAnalysisMngr();
@@ -166,7 +167,7 @@ public class MainClass {
                 list_test.add(data);
 
 //                writer.writeNext(data);
-
+//
 //                counter++;
             }
 
@@ -193,10 +194,6 @@ public class MainClass {
 //            }
 
         }
-
-
-
-
 
         else if (inputid == 2) {
 
@@ -515,7 +512,6 @@ public class MainClass {
 
         else if (inputid == 43) {
             System.out.println("Ignored Test");
-
             SmellAnalysisMngr
                     smellmgr=new SmellAnalysisMngr();
             List<ProjectSmellEntity>
@@ -564,7 +560,6 @@ public class MainClass {
 //                 TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
         }
 
         else if (inputid == 46) {
@@ -582,7 +577,6 @@ public class MainClass {
 //                 TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
 
         }
 
@@ -642,6 +636,7 @@ public class MainClass {
 
             // Step 4: Write the selected rows to a new CSV file
             writeCSV(rootDir+outputFilePath, selectedRows);
+            System.out.println("Random selection file has been written to this location: "+rootDir+outputFilePath);
 
             scanner.close();
 

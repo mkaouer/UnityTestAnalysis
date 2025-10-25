@@ -1,9 +1,8 @@
 package com.unity.testsmell;
-
-
 import com.config.Config;
 import com.csharp.astgenerator.SrcmlUnityCsMetaDataGenerator;
 import com.github.gumtreediff.tree.ITree;
+import com.github.gumtreediff.tree.Tree;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +21,7 @@ public class DefaultTest {
     {
         List<ITree> testfunclist=TreeNodeAnalyzer.getTestFunctionList(root);
         Map<String,Boolean> defaultTest=new HashMap<>();
+        //Map<String,Boolean> defaultTest_class=new HashMap<>();
         ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
 
         if(classnode==null)
@@ -30,18 +30,100 @@ public class DefaultTest {
         ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
 
         String lowerclassname = classname.getLabel();
-        if(lowerclassname.equals("ExampleUnitTest") || lowerclassname.equals("ExampleInstrumentedTest"))
-        {
-            toStringFound = true;
-        }
-        defaultTest.put(lowerclassname,toStringFound);
         toStringFound = false;
+//        if(lowerclassname.startsWith("Example"))
+//        {
+//            toStringFound = true;
+//        }
+//        defaultTest_class.put(lowerclassname,toStringFound);
+
+        for (ITree testfunc : testfunclist) {
+            // Search for the 'Thread' class
+            List<ITree> smstlist = TreeNodeAnalyzer.getStatementList(testfunc);
+            List<ITree> exprsmtlist = TreeNodeAnalyzer.getExprStatementList(testfunc);
+            List<ITree> defaulttestlist = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Assert");
+            //System.out.println("defaulttest list"+defaulttestlist);
+            List<ITree> defaulttestylist = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "specifier", "yield");
+            //System.out.println("defaulttest list"+defaulttestylist);
+
+            ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
+            String classtestfunc = lowerclassname + Config.separatorStr + funcnamenode.getLabel();
+            //System.out.println("classtestfunc"+classtestfunc);
+
+            boolean defaulttestFound = false;
+            boolean defaultTestyealdFound = false;
+            boolean final_duplicate_test = false;
+
+            // Check if 'Thread.sleep()' is found
+            if (defaulttestlist != null && !defaulttestlist.isEmpty()) {
+                defaulttestFound = checkdefaulttest(defaulttestlist);
+                if(defaulttestFound && smstlist.size() <= 1 && exprsmtlist.size() <= 1){
+                    final_duplicate_test = true;
+                }
+            }
+
+            if (defaulttestylist != null && !defaulttestylist.isEmpty()) {
+                defaultTestyealdFound = checkdefaulttest_1(defaulttestylist);
+                if(defaultTestyealdFound && smstlist.size() <= 1 && exprsmtlist.size() <= 1){
+                    final_duplicate_test = true;
+                }
+            }
+
+            // Combine both results, if either is found, mark as true
+            defaultTest.put(classtestfunc, final_duplicate_test);
+        }
 
         return defaultTest;
-
-
     }
 
+    private boolean checkdefaulttest(List<ITree> defaulttestlist) {
+        boolean isfound = false;
+
+        for (ITree defaultNode : defaulttestlist) {
+            List<ITree> siblings = defaultNode.getParent().getChildren();
+            for (int i = 0; i < siblings.size(); i++) {
+                if (siblings.get(i).equals(defaultNode)) {
+                    // Check if next sibling is '.' and the one after that is 'sleep'
+                    if (i + 2 < siblings.size()) {
+                        ITree nextNode = siblings.get(i + 1);
+                        ITree sleepNode = siblings.get(i + 2);
+
+                        if (".".equals(nextNode.getLabel()) && "Pass".equals(sleepNode.getLabel())) {
+                            isfound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return isfound;
+    }
+
+
+    private boolean checkdefaulttest_1(List<ITree> defaulttestylist) {
+        boolean isfound = false;
+
+        for (ITree defaultNode : defaulttestylist) {
+            //System.out.println("getting label"+defaultNode.getLabel());
+            List<ITree> siblings = defaultNode.getParent().getChildren();
+            //System.out.println("getting parents"+ defaultNode.getParent());
+            ITree x = defaultNode.getParent();
+            if(x.toString().startsWith("return")){
+                //System.out.println("siblings "+siblings);
+                ITree res = siblings.get(1);
+                List<ITree> nulllist = res.getChildren();
+                String result = nulllist.get(0).getLabel();
+                if(result.equals("null")){
+                    isfound = true;
+                    break;
+                }
+            }
+
+        }
+
+        return isfound;
+    }
 
 
 

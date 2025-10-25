@@ -7,7 +7,10 @@ import java.io.IOException;
 public class Config {
 	// public static String rootDir="/media/AutoBuilder/UnityPerformance/";
 	public static String
+<<<<<<< HEAD
 
+=======
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
 			rootDir="/media/umd-user/b07094e6-167c-4bb3-993e-58328ec3000f/Test-SMELL-PROJECT/UnityTestAnalysis/Project_Repo/";
 	//rootDir="D:\\Research\\Vr-Test\\";
 	//

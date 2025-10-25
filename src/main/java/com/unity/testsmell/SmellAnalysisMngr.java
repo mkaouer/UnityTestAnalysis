@@ -25,30 +25,44 @@ import static com.config.Config.rootDir;
 
 public class SmellAnalysisMngr {
 
+<<<<<<< HEAD
 	public List<ProjectSmellEntity> analyzeAssertionRoulette() throws IOException {
 		String filepath = Config.gitProjList;
+=======
+    public List<ProjectSmellEntity> analyzeAssertionRoulette() throws IOException {
+        String filepath = Config.gitProjList;
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
 
-		List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
-		// List<PerfFixData> fixdata = new ArrayList<>();
-		List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
+        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
+        // List<PerfFixData> fixdata = new ArrayList<>();
+        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
         List<String[]> csvData = new ArrayList<>();
 
         //System.out.println("Assert Roulette ProjectList ==> " + projlist.size()); 312
 
+<<<<<<< HEAD
 		int counter = 0;
 		for (String proj : projlist) {
             System.out.println("project: "+proj);
 			String projname = ProjectPropertyAnalyzer.getProjName(proj);
             //System.out.println("Assert Roulette ProjectName ==> " + projname); Done
 			TestAnalysisData analysisdata = new TestAnalysisData(projname);
+=======
+        int counter = 0;
+        for (String proj : projlist) {
+            //System.out.println("project: "+proj);
+            String projname = ProjectPropertyAnalyzer.getProjName(proj);
+            System.out.println("ProjectName ==> " + projname);
+            TestAnalysisData analysisdata = new TestAnalysisData(projname);
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
 
-			CommitAnalyzer cmtanalyzer = null;
-			System.out.println("ProjectName==>" + counter + "-->" + projname);
+            CommitAnalyzer cmtanalyzer = null;
+            System.out.println("ProjectName==>" + counter + "-->" + projname);
 
-			counter++;
+            counter++;
 
 
-			try {
+            try {
                 Map <String,String> ownerProject = getProjectStructureName(projname);
                 cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
 
@@ -64,7 +78,7 @@ public class SmellAnalysisMngr {
                 projsmell.setProjName(projname);
                 projsmell.setSmellPercentage(percentage);
 
-                System.out.println("Assert Roulette ProjectSmellName ==> " + projsmell);
+                //System.out.println("Assert Roulette ProjectSmellName ==> " + projsmell);
                 smellpercentage.add(projsmell);
 
                 for (String key : allKeys) {
@@ -76,14 +90,15 @@ public class SmellAnalysisMngr {
                 }
 
             } catch (Exception e) {
-				// TODO Auto-generated catch block
-                System.out.println("Assert Roulette Exception ==> " + e.getMessage());
-				e.printStackTrace();
-			}
-            String csvFilePath = rootDir+"Assertion_Roulette_Smells.csv";
+                // TODO Auto-generated catch block
+                //System.out.println("Assert Roulette Exception ==> " + e.getMessage());
+                e.printStackTrace();
+            }
+            String csvFilePath = rootDir+"Assertion_Roulette_Smells_.csv";
             createFileIfNotExists(csvFilePath);
             System.out.println("CsvPath====>>>" + csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
+<<<<<<< HEAD
 		}
         String inputFilePath = rootDir+"Assertion_Roulette_Smells.csv";
         String outputFilePath = rootDir+"Final_Assertion_Roulette_Smells.csv";
@@ -92,6 +107,16 @@ public class SmellAnalysisMngr {
 		return smellpercentage;
 
 	}
+=======
+        }
+        String inputFilePath = rootDir+"Assertion_Roulette_Smells_.csv";
+        String outputFilePath = rootDir+"Final_Assertion_Roulette_Smells_.csv";
+        String smelltype = "Assertion_Roulette_Smells";
+        removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
+        return smellpercentage;
+
+    }
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
 
     public static Map<String,String> getProjectStructureName(String projname){
         String owner = projname.split("@")[0];
@@ -230,13 +255,18 @@ public class SmellAnalysisMngr {
                 e.printStackTrace();
             }
 
-            String csvFilePath = rootDir+"SensitiveEquality.csv";
+            String csvFilePath = rootDir+"SensitiveEquality_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"SensitiveEquality.csv";
         String outputFilePath = rootDir+"Final_SensitiveEquality.csv";
+=======
+        String inputFilePath = rootDir+"SensitiveEquality_.csv";
+        String outputFilePath = rootDir+"Final_SensitiveEquality_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "SensitiveEquality";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
         return smellpercentage;
@@ -246,39 +276,47 @@ public class SmellAnalysisMngr {
 
     public List<ProjectSmellEntity> analyzeLazyTest() throws IOException {
         String filepath = Config.gitProjList;
-
-        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
-        // List<PerfFixData> fixdata = new ArrayList<>();
-        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
         List<String[]> csvData = new ArrayList<>();
-
+        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
+        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
         int counter = 0;
+
         for (String proj : projlist) {
             String projname = ProjectPropertyAnalyzer.getProjName(proj);
-            TestAnalysisData analysisdata = new TestAnalysisData(projname);
-
-            CommitAnalyzer cmtanalyzer = null;
-            System.out.println(counter + "-->" + projname);
-
+            System.out.println(counter + "--> Analyzing project: " + projname);
             counter++;
-//            if (counter > 5)
-//                return smellpercentage;
 
             try {
-                Map <String,String> ownerProject = getProjectStructureName(projname);
-                cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
+                // Load project structure and production calls once for the whole project
+                Map<String, String> ownerProject = getProjectStructureName(projname);
+                CommitAnalyzer cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
 
                 String commitid = cmtanalyzer.getHeadCommitID();
-                Map<String,Boolean> testfuncconditionalTestmap = cmtanalyzer.getLazyTest(commitid);
-                Set<String> allKeys = testfuncconditionalTestmap.keySet();
+                Map<String, Object> productcalllist = CommitAnalyzer.getProductCalls(commitid);
+
+                @SuppressWarnings("unchecked")
+                Map<String, List<String>> productCalls = (Map<String, List<String>>) productcalllist.get("productCalls");
+                if (productCalls == null || productCalls.isEmpty()) {
+                    //System.out.println("Error: Production calls are null or empty for project: " + projname);
+                    continue;
+                }
+
+                // Perform lazy test analysis using preloaded production calls
+                Map<String, Boolean> testfuncLazyTestMap = cmtanalyzer.getLazyTest(commitid, productCalls);
+
+
+                // Calculate lazy test percentage
                 LazyTest lazyTest = new LazyTest();
-                double percentage = lazyTest.getLazyTestStats(testfuncconditionalTestmap);
+                double percentage = lazyTest.getLazyTestStats(testfuncLazyTestMap);
+
+                // Save results to ProjectSmellEntity
                 ProjectSmellEntity projsmell = new ProjectSmellEntity("LazyTest");
                 projsmell.setProjName(projname);
                 projsmell.setSmellPercentage(percentage);
                 smellpercentage.add(projsmell);
+                Set<String> allKeys = testfuncLazyTestMap.keySet();
                 for (String key : allKeys) {
-                    if (testfuncconditionalTestmap.get(key)) {
+                    if (testfuncLazyTestMap.get(key)) {
                         // Add project name, key, and smell type to the csvData list only if value is true
                         csvData.add(new String[]{projsmell.getProjName(), key, "LazyTest"});
                     }
@@ -286,87 +324,230 @@ public class SmellAnalysisMngr {
 
 
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            String csvFilePath = rootDir+"LazyTest.csv";
+
+            String csvFilePath = rootDir+"LazyTest_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
-
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"LazyTest.csv";
         String outputFilePath = rootDir+"Final_LazyTest.csv";
         String smelltype = "LazyTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
+=======
+        String inputFilePath = rootDir+"LazyTest_.csv";
+        String outputFilePath = rootDir+"Final_LazyTest__.csv";
+        String smelltype = "LazyTest";
+        removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         return smellpercentage;
-
     }
 
+<<<<<<< HEAD
+=======
+
+
+//    public List<ProjectSmellEntity> analyzeLazyTest() throws IOException {
+//        String filepath = Config.gitProjList;
+//
+//        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
+//        // List<PerfFixData> fixdata = new ArrayList<>();
+//        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
+//        List<String[]> csvData = new ArrayList<>();
+//
+//        int counter = 0;
+//        for (String proj : projlist) {
+//            String projname = ProjectPropertyAnalyzer.getProjName(proj);
+//            TestAnalysisData analysisdata = new TestAnalysisData(projname);
+//
+//            CommitAnalyzer cmtanalyzer = null;
+//            System.out.println(counter + "-->" + projname);
+//
+//            counter++;
+////            if (counter > 5)
+////                return smellpercentage;
+//
+//            try {
+//                Map <String,String> ownerProject = getProjectStructureName(projname);
+//                cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
+//
+//                String commitid = cmtanalyzer.getHeadCommitID();
+//                Map<String,Boolean> testfuncconditionalTestmap = cmtanalyzer.getLazyTest(commitid);
+//                Set<String> allKeys = testfuncconditionalTestmap.keySet();
+//                LazyTest lazyTest = new LazyTest();
+//                double percentage = lazyTest.getLazyTestStats(testfuncconditionalTestmap);
+//                ProjectSmellEntity projsmell = new ProjectSmellEntity("LazyTest");
+//                projsmell.setProjName(projname);
+//                projsmell.setSmellPercentage(percentage);
+//                smellpercentage.add(projsmell);
+////                for (String key : allKeys) {
+////                    if (testfuncconditionalTestmap.get(key)) {
+////                        // Add project name, key, and smell type to the csvData list only if value is true
+////                        csvData.add(new String[]{projsmell.getProjName(), key, "LazyTest"});
+////                    }
+////                }
+//
+//
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+////            String csvFilePath = rootDir+"LazyTest_.csv";
+////            createFileIfNotExists(csvFilePath);
+////            appendDataToCSV(csvData, csvFilePath);
+//
+//        }
+////        String inputFilePath = rootDir+"LazyTest_.csv";
+////        String outputFilePath = rootDir+"Final_LazyTest_.csv";
+////        String smelltype = "LazyTest";
+////        removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
+//
+//        return smellpercentage;
+//
+//    }
+
+//
+//
+//    public List<ProjectSmellEntity> analyzeEagerTest() throws IOException {
+//        String filepath = Config.gitProjList;
+//
+//        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
+//        // List<PerfFixData> fixdata = new ArrayList<>();
+//        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
+//        List<String[]> csvData = new ArrayList<>();
+//
+//        int counter = 0;
+//        for (String proj : projlist) {
+//            String projname = ProjectPropertyAnalyzer.getProjName(proj);
+//            TestAnalysisData analysisdata = new TestAnalysisData(projname);
+//
+//            CommitAnalyzer cmtanalyzer = null;
+//            System.out.println(counter + "-->" + projname);
+//            counter++;
+////            if(!projname.equals("iamtomhewitt@jet-dash-vr")) {
+////                continue;
+////            }
+////            if (counter > 5)
+////                return smellpercentage;
+//
+//            try {
+//                Map <String,String> ownerProject = getProjectStructureName(projname);
+//                cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
+//
+//                String commitid = cmtanalyzer.getHeadCommitID();
+//                Map<String,Boolean> testfuncconditionalTestmap = cmtanalyzer.getEagerTest(commitid);
+//                System.out.println("test:"+testfuncconditionalTestmap);
+//                Set<String> allKeys = testfuncconditionalTestmap.keySet();
+//                EagerTest eagerTest = new EagerTest();
+//
+//                double percentage = eagerTest.getEagerTestStats(testfuncconditionalTestmap);
+//                ProjectSmellEntity projsmell = new ProjectSmellEntity("EagerTest");
+//
+//                projsmell.setProjName(projname);
+//                projsmell.setSmellPercentage(percentage);
+//                smellpercentage.add(projsmell);
+////
+////                for (String key : allKeys) {
+////                    if (testfuncconditionalTestmap.get(key)) {
+////                        // Add project name, key, and smell type to the csvData list only if value is true
+////                        csvData.add(new String[]{projsmell.getProjName(), key, "EagerTest"});
+////                    }
+////                }
+//
+//
+//
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+////            String csvFilePath = rootDir+"EagerTest.csv";
+////            createFileIfNotExists(csvFilePath);
+////            appendDataToCSV(csvData, csvFilePath);
+//
+//        }
+////        String inputFilePath = rootDir+"EagerTest.csv";
+////        String outputFilePath = rootDir+"Final_EagerTest.csv";
+////        String smelltype = "EagerTest";
+////        removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
+////        return smellpercentage;
+//
+//        return smellpercentage;
+//    }
+
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
     public List<ProjectSmellEntity> analyzeEagerTest() throws IOException {
         String filepath = Config.gitProjList;
-
-        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
-        // List<PerfFixData> fixdata = new ArrayList<>();
-        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
         List<String[]> csvData = new ArrayList<>();
-
+        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
+        List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
         int counter = 0;
+
         for (String proj : projlist) {
             String projname = ProjectPropertyAnalyzer.getProjName(proj);
-            TestAnalysisData analysisdata = new TestAnalysisData(projname);
-
-            CommitAnalyzer cmtanalyzer = null;
-            System.out.println(counter + "-->" + projname);
+            System.out.println(counter + "--> Analyzing project: " + projname);
             counter++;
-//            if(!projname.equals("iamtomhewitt@jet-dash-vr")) {
-//                continue;
-//            }
-//            if (counter > 5)
-//                return smellpercentage;
 
             try {
-                Map <String,String> ownerProject = getProjectStructureName(projname);
-                cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
+                // Load project structure and production calls once for the whole project
+                Map<String, String> ownerProject = getProjectStructureName(projname);
+                CommitAnalyzer cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
 
                 String commitid = cmtanalyzer.getHeadCommitID();
-                Map<String,Boolean> testfuncconditionalTestmap = cmtanalyzer.getEagerTest(commitid);
-                Set<String> allKeys = testfuncconditionalTestmap.keySet();
+                Map<String, Object> productcalllist = CommitAnalyzer.getProductCalls(commitid);
+
+                @SuppressWarnings("unchecked")
+                Map<String, List<String>> productCalls = (Map<String, List<String>>) productcalllist.get("productCalls");
+                if (productCalls == null || productCalls.isEmpty()) {
+                    //System.out.println("Error: Production calls are null or empty for project: " + projname);
+                    continue;
+                }
+
+                // Perform eager test analysis using preloaded production calls
+                Map<String, Boolean> testfuncEagerTestMap = cmtanalyzer.getEagerTest(commitid, productCalls);
+
+                // Calculate eager test percentage
                 EagerTest eagerTest = new EagerTest();
+                double percentage = eagerTest.getEagerTestStats(testfuncEagerTestMap);
 
-                double percentage = eagerTest.getEagerTestStats(testfuncconditionalTestmap);
+                // Save results to ProjectSmellEntity
                 ProjectSmellEntity projsmell = new ProjectSmellEntity("EagerTest");
-
                 projsmell.setProjName(projname);
                 projsmell.setSmellPercentage(percentage);
                 smellpercentage.add(projsmell);
-
+                Set<String> allKeys = testfuncEagerTestMap.keySet();
                 for (String key : allKeys) {
-                    if (testfuncconditionalTestmap.get(key)) {
+                    if (testfuncEagerTestMap.get(key)) {
                         // Add project name, key, and smell type to the csvData list only if value is true
                         csvData.add(new String[]{projsmell.getProjName(), key, "EagerTest"});
                     }
                 }
 
-
-
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            String csvFilePath = rootDir+"EagerTest.csv";
+            String csvFilePath = rootDir+"EagerTest_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
-
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"EagerTest.csv";
         String outputFilePath = rootDir+"Final_EagerTest.csv";
+=======
+        String inputFilePath = rootDir+"EagerTest_.csv";
+        String outputFilePath = rootDir+"Final_EagerTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "EagerTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
         return smellpercentage;
-
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
     public List<ProjectSmellEntity> analyzeMysteryGuest() throws IOException {
         String filepath = Config.gitProjList;
         List<String[]> csvData = new ArrayList<>();
@@ -417,13 +598,18 @@ public class SmellAnalysisMngr {
                 e.printStackTrace();
             }
 
-            String csvFilePath = rootDir+"MysteryGuest.csv";
+            String csvFilePath = rootDir+"MysteryGuest_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"MysteryGuest.csv";
         String outputFilePath = rootDir+"Final_MysteryGuest.csv";
+=======
+        String inputFilePath = rootDir+"MysteryGuest_.csv";
+        String outputFilePath = rootDir+"Final_MysteryGuest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "MysteryGuest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -456,7 +642,7 @@ public class SmellAnalysisMngr {
 
                 String commitid = cmtanalyzer.getHeadCommitID();
                 Map<String, Map<String, Integer>> testfuncconditionalTestmap = cmtanalyzer.getConditionalTest(commitid);
-                System.out.println("testfuncconditionalTestmap"+testfuncconditionalTestmap);
+                //System.out.println("testfuncconditionalTestmap"+testfuncconditionalTestmap);
                 ConditionalTestLogic conditionalTestLogic = new ConditionalTestLogic();
 //                double percentage = assertroulette.getAssertRoulteStats(projtestfuncassertmap);
                 Map<String,Double> percetnage_map = conditionalTestLogic.getConditionalTestLogicStats(testfuncconditionalTestmap);
@@ -497,8 +683,11 @@ public class SmellAnalysisMngr {
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
         return smellpercentage;
-
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
     public  List<ProjectSmellEntity> analyzeGeneralFixture() throws IOException {
         String filepath = Config.gitProjList;
 
@@ -534,8 +723,11 @@ public class SmellAnalysisMngr {
                 cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
 
                 String commitid = cmtanalyzer.getHeadCommitID();
+                //System.out.println("commit _id"+commitid);
                 Map<String, Double> testgeneralfixtureTestmap = cmtanalyzer.getGeneralFixture(commitid);
-                                GeneralFixture generalFixture = new GeneralFixture();
+                //System.out.println("test:"+testgeneralfixtureTestmap);
+                //System.out.println("something broken....1");
+                GeneralFixture generalFixture = new GeneralFixture();
                 Set<String> allKeys = testgeneralfixtureTestmap.keySet();
                 double percentage = generalFixture.getGeneralFixtureStats(testgeneralfixtureTestmap);
 
@@ -545,10 +737,10 @@ public class SmellAnalysisMngr {
 ////                System.out.println(percetnage_map);
 //                percetnage_map.forEach(
 //                        (k,v) -> {
-                            ProjectSmellEntity projsmell = new ProjectSmellEntity("GeneralTestFixture");
-                            projsmell.setProjName(projname);
-                            projsmell.setSmellPercentage(percentage);
-                            smellpercentage.add(projsmell);
+                ProjectSmellEntity projsmell = new ProjectSmellEntity("GeneralTestFixture");
+                projsmell.setProjName(projname);
+                projsmell.setSmellPercentage(percentage);
+                smellpercentage.add(projsmell);
 //                        }
 //
 //                );
@@ -557,7 +749,7 @@ public class SmellAnalysisMngr {
                 projsmells.setProjName(projname);
                 for (String key : allKeys) {
                     Double value = testgeneralfixtureTestmap.get(key);
-                    if (value > 0.00) {  // Only add keys where value is greater than 0.00
+                    if (value > 25.00) {  // Only add keys where value is greater than 0.00
                         csvData.add(new String[]{projsmell.getProjName(), key, "GeneralFixture"});
                     }
                 }
@@ -569,13 +761,18 @@ public class SmellAnalysisMngr {
                 e.printStackTrace();
             }
 
-            String csvFilePath = rootDir+"GeneralFixture.csv";
+            String csvFilePath = rootDir+"GeneralFixture_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"GeneralFixture.csv";
         String outputFilePath = rootDir+"Final_GeneralFixture.csv";
+=======
+        String inputFilePath = rootDir+"GeneralFixture_.csv";
+        String outputFilePath = rootDir+"Final_GeneralFixture_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "GeneralFixture";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
         return smellpercentage;
@@ -627,14 +824,19 @@ public class SmellAnalysisMngr {
                 e.printStackTrace();
             }
 
-            String csvFilePath = rootDir+"MagicNumber.csv";
+            String csvFilePath = rootDir+"MagicNumber_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
 
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"MagicNumber.csv";
         String outputFilePath = rootDir+"Final_MagicNumber.csv";
+=======
+        String inputFilePath = rootDir+"MagicNumber_.csv";
+        String outputFilePath = rootDir+"Final_MagicNumber_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "MagicNumber";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -691,14 +893,23 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"DefaultTest.csv";
+=======
+            String csvFilePath = rootDir+"DefaultTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"DefaultTest.csv";
         String outputFilePath = rootDir+"Final_DefaultTest.csv";
+=======
+        String inputFilePath = rootDir+"DefaultTest_.csv";
+        String outputFilePath = rootDir+"Final_DefaultTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "DefaultTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -733,7 +944,11 @@ public class SmellAnalysisMngr {
 
                 String commitid = cmtanalyzer.getHeadCommitID();
                 Map<String,Boolean> testredundantprintTestmap = cmtanalyzer.getRedundantPrint(commitid);
+<<<<<<< HEAD
                 System.out.println("Map of RedundantPrint: "+ testredundantprintTestmap);
+=======
+                //System.out.println("Map of RedundantPrint: "+ testredundantprintTestmap);
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
                 Set<String> allKeys = testredundantprintTestmap.keySet();
                 RedundantPrint redundantPrint = new RedundantPrint();
                 double percentage = redundantPrint.getRedundantPrintStats(testredundantprintTestmap);
@@ -758,15 +973,24 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"RedundantPrint.csv";
+=======
+            String csvFilePath = rootDir+"RedundantPrint_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"RedundantPrint.csv";
         String outputFilePath = rootDir+"Final_RedundantPrint.csv";
+=======
+        String inputFilePath = rootDir+"RedundantPrint_.csv";
+        String outputFilePath = rootDir+"Final_RedundantPrint_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "RedundantPrint";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -823,14 +1047,23 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"ConstructorInitialization.csv";
+=======
+            String csvFilePath = rootDir+"ConstructorInitialization_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"ConstructorInitialization.csv";
         String outputFilePath = rootDir+"Final_ConstructorInitialization.csv";
+=======
+        String inputFilePath = rootDir+"ConstructorInitialization_.csv";
+        String outputFilePath = rootDir+"Final_ConstructorInitialization_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "ConstructorInitialization";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -840,9 +1073,7 @@ public class SmellAnalysisMngr {
 
     public List<ProjectSmellEntity> analyzeSleepyTest() throws IOException {
         String filepath = Config.gitProjList;
-
         List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
-        // List<PerfFixData> fixdata = new ArrayList<>();
         List<ProjectSmellEntity> smellpercentage = new ArrayList<>();
         List<String[]> csvData = new ArrayList<>();
         int counter = 0;
@@ -886,17 +1117,28 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"SleepyTest.csv";
+=======
+            String csvFilePath = rootDir+"SleepyTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
+<<<<<<< HEAD
 
         String inputFilePath = rootDir+"SleepyTest.csv";
         String outputFilePath = rootDir+"Final_SleepyTest.csv";
         String smelltype = "SleepyTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
+=======
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
 
+        String inputFilePath = rootDir+"SleepyTest_.csv";
+        String outputFilePath = rootDir+"Final_SleepyTest_.csv";
+        String smelltype = "SleepyTest";
+        removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
         return smellpercentage;
 
     }
@@ -924,7 +1166,6 @@ public class SmellAnalysisMngr {
             try {
                 Map <String,String> ownerProject = getProjectStructureName(projname);
                 cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
-
                 String commitid = cmtanalyzer.getHeadCommitID();
                 Map<String,Boolean> testemptyTestmap = cmtanalyzer.getEmptyTest(commitid);
                 Set<String> allKeys = testemptyTestmap.keySet();
@@ -950,14 +1191,19 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            String csvFilePath = rootDir+"EmptyTest.csv";
+            String csvFilePath = rootDir+"EmptyTest_.csv";
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"EmptyTest.csv";
         String outputFilePath = rootDir+"Final_EmptyTest.csv";
+=======
+        String inputFilePath = rootDir+"EmptyTest_.csv";
+        String outputFilePath = rootDir+"Final_EmptyTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "EmptyTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -1013,15 +1259,24 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"IgnoredTest.csv";
+=======
+            String csvFilePath = rootDir+"IgnoredTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"IgnoredTest.csv";
         String outputFilePath = rootDir+"Final_IgnoredTest.csv";
+=======
+        String inputFilePath = rootDir+"IgnoredTest_.csv";
+        String outputFilePath = rootDir+"Final_IgnoredTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "IgnoredTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -1077,15 +1332,24 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"ExceptionThrowingTest.csv";
+=======
+            String csvFilePath = rootDir+"ExceptionThrowingTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"ExceptionThrowingTest.csv";
         String outputFilePath = rootDir+"Final_ExceptionThrowingTest.csv";
+=======
+        String inputFilePath = rootDir+"ExceptionThrowingTest_.csv";
+        String outputFilePath = rootDir+"Final_ExceptionThrowingTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "ExceptionThrowingTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -1141,14 +1405,23 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"UnknownTest.csv";
+=======
+            String csvFilePath = rootDir+"UnknownTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"UnknownTest.csv";
         String outputFilePath = rootDir+"Final_UnknownTest.csv";
+=======
+        String inputFilePath = rootDir+"UnknownTest_.csv";
+        String outputFilePath = rootDir+"Final_UnknownTest_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "UnknownTest";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -1179,7 +1452,11 @@ public class SmellAnalysisMngr {
 
                 String commitid = cmtanalyzer.getHeadCommitID();
                 Map<String,Boolean> testredundantassert = cmtanalyzer.getRedundantAssert(commitid);
+<<<<<<< HEAD
                 System.out.println("Map of testredundantassert: "+ testredundantassert);
+=======
+               // System.out.println("Map of testredundantassert: "+ testredundantassert);
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
                 RedundantAssertion redundantassertion = new RedundantAssertion();
                 Set<String> allKeys = testredundantassert.keySet();
                 double percentage = redundantassertion.getRedundantAssertionStats(testredundantassert);
@@ -1202,13 +1479,22 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"RedundantAssertion_.csv";
+=======
+            String csvFilePath = rootDir+"RedundantAssertion__.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
+<<<<<<< HEAD
         String inputFilePath = rootDir+"RedundantAssertion_.csv";
         String outputFilePath = rootDir+"Final_RedundantAssertion_.csv";
+=======
+        String inputFilePath = rootDir+"RedundantAssertion__.csv";
+        String outputFilePath = rootDir+"Final_RedundantAssertion__.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "RedundantAssertion";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -1227,7 +1513,6 @@ public class SmellAnalysisMngr {
         for (String proj : projlist) {
             String projname = ProjectPropertyAnalyzer.getProjName(proj);
             TestAnalysisData analysisdata = new TestAnalysisData(projname);
-
             CommitAnalyzer cmtanalyzer = null;
             System.out.println(counter + "-->" + projname);
             ;
@@ -1260,14 +1545,23 @@ public class SmellAnalysisMngr {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+<<<<<<< HEAD
             String csvFilePath = rootDir+"DuplicateAssert_.csv";
+=======
+            String csvFilePath = rootDir+"DuplicateAssert__.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             createFileIfNotExists(csvFilePath);
             appendDataToCSV(csvData, csvFilePath);
 
         }
 
+<<<<<<< HEAD
         String inputFilePath = rootDir+"DuplicateAssert_.csv";
         String outputFilePath = rootDir+"Final_DuplicateAssert_.csv";
+=======
+        String inputFilePath = rootDir+"DuplicateAssert__.csv";
+        String outputFilePath = rootDir+"Final_DuplicateAssert__.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
         String smelltype = "DuplicateAssert";
         removeDuplicatesFromCSV(inputFilePath,outputFilePath,smelltype);
 
@@ -1286,6 +1580,7 @@ public class SmellAnalysisMngr {
         Set<String> existingTestCases_nosmell = new HashSet<>();
         // Read test cases from other CSV files
         Set<String> existingTestCases = new HashSet<>();
+<<<<<<< HEAD
         existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_Assertion_Roulette_Smells.csv"));
         existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_EagerTest.csv"));
         existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_ConstructorInitialization.csv"));
@@ -1301,6 +1596,23 @@ public class SmellAnalysisMngr {
         existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_RedundantPrint.csv"));
         existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_SensitiveEquality.csv"));
         existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_SleepyTest.csv"));
+=======
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_Assertion_Roulette_Smells_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_EagerTest_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_ConstructorInitialization_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_DefaultTest_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_EmptyTest_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_ExceptionThrowingTest_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_GeneralFixture_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_IgnoredTest_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_LazyTest__.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_MagicNumber_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_MysteryGuest_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_RedundantAssertion_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_RedundantPrint_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_SensitiveEquality_.csv"));
+        existingTestCases.addAll(getTestCasesFromCSV(rootDir+"Final_SleepyTest_.csv"));
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
 
 
         int counter = 0;
@@ -1351,7 +1663,11 @@ public class SmellAnalysisMngr {
             String csvFilePath = rootDir + "no_smell.csv";
             appendDataToCSV(csvData, csvFilePath);
             String inputFilePath = rootDir+"no_smell.csv";
+<<<<<<< HEAD
             String outputFilePath= rootDir+"Final_no_smell.csv";
+=======
+            String outputFilePath= rootDir+"Final_no_smell_.csv";
+>>>>>>> 63cf043761a0e0057ff57ae9d9f2495203e7aa17
             String smellType = "no smell";
             File outputFile = new File(outputFilePath);
             if (!outputFile.exists()) {
@@ -1467,35 +1783,35 @@ public class SmellAnalysisMngr {
 
 
     public static void main(String[] args) {
-            String filepath = Config.gitProjList;
+        String filepath = Config.gitProjList;
 
-            List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
-            // List<PerfFixData> fixdata = new ArrayList<>();
+        List<String> projlist = TextFileReaderWriter.GetFileContentByLine(filepath);
+        // List<PerfFixData> fixdata = new ArrayList<>();
 
-            List<Map<String, Double>> generalFixtureSmells= new ArrayList<>();
+        List<Map<String, Double>> generalFixtureSmells= new ArrayList<>();
 //            List<Map<String, Map<String, Integer>>> conditionalTestSmells= new ArrayList<>();
-            List< Map<String,Boolean> > mysteryGuestSmells= new ArrayList<>();
-            List<Map<String, Boolean>> eagerTestSmells= new ArrayList<>();
-            List<Map<String, Boolean>> lazyTestSmells= new ArrayList<>();
-            List<Map<String, Boolean>> sensitiveEqualitySmells= new ArrayList<>();
-            List<Map<String, List<AssertCall>>> assertionRouletteSmells= new ArrayList<>();
-            List<Map<String, Boolean>> defaultTestSmells= new ArrayList<>();
-            List< Map<String,Boolean> > redundantPrint= new ArrayList<>();
-            List< Map<String,Boolean> > constructorInitialization= new ArrayList<>();
+        List< Map<String,Boolean> > mysteryGuestSmells= new ArrayList<>();
+        List<Map<String, Boolean>> eagerTestSmells= new ArrayList<>();
+        List<Map<String, Boolean>> lazyTestSmells= new ArrayList<>();
+        List<Map<String, Boolean>> sensitiveEqualitySmells= new ArrayList<>();
+        List<Map<String, List<AssertCall>>> assertionRouletteSmells= new ArrayList<>();
+        List<Map<String, Boolean>> defaultTestSmells= new ArrayList<>();
+        List< Map<String,Boolean> > redundantPrint= new ArrayList<>();
+        List< Map<String,Boolean> > constructorInitialization= new ArrayList<>();
 
-            int counter = 0;
-            for (String proj : projlist) {
-                String projname = ProjectPropertyAnalyzer.getProjName(proj);
-                TestAnalysisData analysisdata = new TestAnalysisData(projname);
+        int counter = 0;
+        for (String proj : projlist) {
+            String projname = ProjectPropertyAnalyzer.getProjName(proj);
+            TestAnalysisData analysisdata = new TestAnalysisData(projname);
 
-                CommitAnalyzer cmtanalyzer = null;
-                System.out.println(counter + "-->" + projname);
+            CommitAnalyzer cmtanalyzer = null;
+            System.out.println(counter + "-->" + projname);
 
-                counter++;
-                if (projname.equals("Unity-Technologies@InputSystem"))
-                {
-                    continue;
-                }
+            counter++;
+            if (projname.equals("Unity-Technologies@InputSystem"))
+            {
+                continue;
+            }
 //
 //                if(!projname.equals("iamtomhewitt@jet-dash-vr")) {
 //                    continue;
@@ -1506,23 +1822,23 @@ public class SmellAnalysisMngr {
 //                {
 //                    continue;
 //                }
-                try {
-                    Map <String,String> ownerProject = getProjectStructureName(projname);
+            try {
+                Map <String,String> ownerProject = getProjectStructureName(projname);
                 cmtanalyzer = new CommitAnalyzer(ownerProject.keySet().iterator().next(), ownerProject.values().iterator().next(), proj);
 
-                    String commitid = cmtanalyzer.getHeadCommitID();
-                    Map<String, Double> tempMap = cmtanalyzer.getGeneralFixture(commitid);
+                String commitid = cmtanalyzer.getHeadCommitID();
+                Map<String, Double> tempMap = cmtanalyzer.getGeneralFixture(commitid);
 
-                    Map<String, Double> newMap1 = new HashMap<>();
-                    Iterator<Map.Entry<String, Double>> iterator1 = tempMap.entrySet().iterator();
-                    while (iterator1.hasNext()) {
-                        Map.Entry<String,  Double> entry = iterator1.next();
-                        iterator1.remove();
-                        newMap1.put(projname+'_'+entry.getKey(),entry.getValue());  // Whatever logic to compose new key/value pair.
-                    }
-                    tempMap.clear();
-                    tempMap.putAll(newMap1);
-                    generalFixtureSmells.add(tempMap);
+                Map<String, Double> newMap1 = new HashMap<>();
+                Iterator<Map.Entry<String, Double>> iterator1 = tempMap.entrySet().iterator();
+                while (iterator1.hasNext()) {
+                    Map.Entry<String,  Double> entry = iterator1.next();
+                    iterator1.remove();
+                    newMap1.put(projname+'_'+entry.getKey(),entry.getValue());  // Whatever logic to compose new key/value pair.
+                }
+                tempMap.clear();
+                tempMap.putAll(newMap1);
+                generalFixtureSmells.add(tempMap);
 
 
 //                    Map<String, Map<String, Integer>> tempMap_2 = cmtanalyzer.getConditionalTest(commitid);
@@ -1600,12 +1916,12 @@ public class SmellAnalysisMngr {
 
 
 
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+
+        }
 
         final Optional<Map<String, Double>> generalFixtureSmellsMap = generalFixtureSmells.stream().reduce((firstMap, secondMap) -> {
             return Stream.concat(firstMap.entrySet().stream(), secondMap.entrySet().stream())
