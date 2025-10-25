@@ -41,7 +41,10 @@ public class SrcmlUnityCsTreeGenerator extends AbstractSrcmlTreeGenerator {
     @Override
     public TreeContext generate(Reader r) throws IOException {
         lr = new LineReader(r);
+//        System.out.println("LineReader==> " + lr);
         String output = readStandardOutput(lr);
+//        System.out.println("Generated SrcML Tree Output Length: " + output.length());
+//        System.out.println("Generated SrcML Tree: " + output);
         return getTreeContext(output);
     }
 

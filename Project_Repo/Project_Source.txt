@@ -33,7 +33,7 @@ https://github.com/bobsixtyfour/vrchat-asl.git
 https://github.com/BocuD/VRBuildHelper.git
 https://github.com/BOLL7708/OpenVRNotificationPipe.git
 https://github.com/brandonmousseau/vhvr-mod.git
-https://github.com/Breality/ICS4U-FSEV2.git
+
 https://github.com/CallumHoughton18/ChemViewAR.git
 https://github.com/CapsuleEndoscope/VirtualCapsuleEndoscopy.git
 https://github.com/ChanyaVRC/VRCOscLib.git
@@ -104,7 +104,7 @@ https://github.com/gompocp/VRChatMods.git
 https://github.com/googlearchive/tango-examples-unity.git
 https://github.com/gpsnmeajp/EasyVirtualMotionCaptureForUnity.git
 https://github.com/gpvigano/VRTK-GearVR-Test.git
-https://github.com/HalcyonGrid/halcyon.git
+
 https://github.com/halsafar/BeatSaberSongBrowser.git
 https://github.com/holojam/HolojamSDK-Unity.git
 https://github.com/hotbreakb/Capstone_Design.git

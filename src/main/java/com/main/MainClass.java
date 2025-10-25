@@ -58,7 +58,7 @@ public class MainClass {
 
         System.out.println("Enter your action:");
 
-        System.out.println("0->Download Projects" +
+        System.out.println("1->Download Projects" +
 //                "\n2->Commit Change Analysis"
 //				+ "\n3->Read CSV File and Generate Patch"
                         "\n11->Generate Test and Functional code Method and Class Count (RQ1)"
@@ -144,7 +144,7 @@ public class MainClass {
         }
         else if(inputid ==3) {
             System.out.println("\n\n\nGenerate Random Test Methods\n\n\n");
-            File file = new File("/Users/farazgurramkonda/IdeaProjects/UnityTestAnalysis/Project_Repo/GitRepo/Output_Test_File.csv");
+            File file = new File("/Users/username/IdeaProjects/UnityTestAnalysis/Project_Repo/GitRepo/Output_Test_File.csv");
             FileWriter outputfile = new FileWriter(file);
             CSVWriter writer = new CSVWriter(outputfile);
             String[] header = {"Project_Name", "Test_Method"};
@@ -152,7 +152,7 @@ public class MainClass {
             int rows = 370, columns = 2, counter = 0;
 
             CSVReader reader = null;
-            reader = new CSVReader(new FileReader("/Users/farazgurramkonda/IdeaProjects/UnityTestAnalysis/Project_Repo/Book1.csv"));
+            reader = new CSVReader(new FileReader("/Users/username/IdeaProjects/UnityTestAnalysis/Project_Repo/Book1.csv"));
             String[] line;
 
             List<String[]> list_test = new ArrayList<>();
@@ -421,7 +421,6 @@ public class MainClass {
 //                 TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
 
         }
         else if (inputid == 38) {

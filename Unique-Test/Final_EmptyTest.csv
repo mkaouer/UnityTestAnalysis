@@ -1,0 +1,19 @@
+Project Name,Test Function,Smell Type
+PastaTime@DataRepVR,InteractionCShapeTests<>CreateAndDestroyScene,EmptyTest
+mattrdowney@planetaria,NewTestScript<>NewTestScriptSimplePasses,EmptyTest
+addyi@SoftwareCity,OrchestratorTest<>OrchestratorTestWithEnumeratorPasses,EmptyTest
+UMI3D@UMI3D-SDK,TestToSerializeSerializer<>WriteReadTest,EmptyTest
+mattrdowney@planetaria,PlanetariaMathTestScript<>PlanetariaMathTestScriptWithEnumeratorPasses,EmptyTest
+icosa-gallery@open-brush,EmptyTest<>Pass,EmptyTest
+addyi@SoftwareCity,ComponentProducerTest<>GenerateDocumentTest,EmptyTest
+FarahKamleh@Group4.Project3,TreeTests<>TreeTest,EmptyTest
+concord-consortium@CEASAR,EditModeTestScript<>EditModeTestScriptSimplePasses,EmptyTest
+MatthewSloyan@final-year-applied-project-and-minor-dissertation,TestSuite<>TestSuiteWithEnumeratorPasses,EmptyTest
+MatthewSloyan@final-year-applied-project-and-minor-dissertation,TestSuite<>TestScoreManager,EmptyTest
+concord-consortium@CEASAR,EditModeTestScript<>EditModeTestScriptWithEnumeratorPasses,EmptyTest
+mattrdowney@planetaria,MiscellaneousTestScript<>MiscellaneousTestScriptWithEnumeratorPasses,EmptyTest
+mattrdowney@planetaria,CoordinateSystemsTestScripts<>CoordinateSystemsTestScriptsWithEnumeratorPasses,EmptyTest
+addyi@SoftwareCity,OrchestratorTest<>OrchestratorTestSimplePasses,EmptyTest
+vrm-c@UniVRM,TreeTests<>TreeTest,EmptyTest
+mattrdowney@planetaria,NewTestScript<>NewTestScriptWithEnumeratorPasses,EmptyTest
+PastaTime@DataRepVR,InteractionCShapeTests<>CreateDestroyInstance,EmptyTest

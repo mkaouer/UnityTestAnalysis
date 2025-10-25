@@ -59,7 +59,12 @@ public class RedundantAssertion {
         boolean isfound = false;
 
             for (ITree num : foundList) {
+//                System.out.println("FoundList Element ==> "+ num);
+//                System.out.println("-----------------------------");
                 AssertCall assertCall = TreeNodeAnalyzer.getAssertCall(num);
+
+//                System.out.println("FoundList AssertCall ==> "+ assertCall.getParamList().size());
+//                System.out.println("-----------------------------");
 
                 if (assertCall.getParamList().size() > 0) {
                     int count =0, count2=0;

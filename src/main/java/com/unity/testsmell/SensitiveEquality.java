@@ -34,7 +34,7 @@ private boolean toStringFound = false;
 
 		for(ITree testfunc:testfunclist)
 		{
-			List<ITree> if_stmt_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "ToString");
+			List<ITree> if_stmt_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "ToString()");
 			ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
 //			List<AssertCall> assercalllist=new ArrayList<>();
 			String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();

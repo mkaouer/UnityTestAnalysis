@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="core-3.0.0-beta1-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/core-3.0.0-beta1-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/core-3.0.0-beta1-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -78,96 +78,180 @@ public class LazyTest {
 
 	}
 
-	public Map<String,Boolean> searchForLazyTest(ITree root)
-	{
-		List<ITree> testfunclist=TreeNodeAnalyzer.getTestFunctionList(root);
-        List<ITree> testfunclistCopy = new ArrayList<>();
-        for( ITree testfunc: testfunclist){
-            ITree copy = testfunc.deepCopy();
-            testfunclistCopy.add(copy);
+//	public Map<String,Boolean> searchForLazyTest(ITree root)
+//	{
+//        System.out.println("mapLazy22 rootIssue ==> " + root);
+//
+//		List<ITree> testfunclist=TreeNodeAnalyzer.getTestFunctionList(root);
+//
+//        System.out.println("mapLazy22 testfunclist ==> " + testfunclist.size());
+//
+//        List<ITree> testfunclistCopy = new ArrayList<>();
+//        for( ITree testfunc: testfunclist){
+//            ITree copy = testfunc.deepCopy();
+//            testfunclistCopy.add(copy);
+//        }
+//        System.out.println("mapLazy22 ListSize ==> " + testfunclistCopy.size());
+//		Map<String,Boolean> LazyTest=new HashMap<>();
+//		ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
+//
+//		if(classnode==null)
+//			return LazyTest;
+//
+//		ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
+//
+//		String lowerclassname = classname.getLabel();
+//
+//        Map<ITree,Integer> funcs_map = new HashMap<>();
+//        System.out.println("mapLazy22 testFunctionSize ==> " + testfunclist.size());
+//        for(ITree testfunc:testfunclist)
+//		{
+//			List<ITree> calls_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "call", "");
+////			ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
+////    		String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();
+//            System.out.println("mapLazy22 callList ==> " + calls_list.size());
+//			if(calls_list!=null && calls_list.size()>0)
+//			{
+//				for(ITree call : calls_list){
+//                    call.getChildren().forEach( ch -> {
+//                        if(ch.getType().toString().equalsIgnoreCase("name")){
+//                            if (funcs_map.containsKey(ch)){
+//                                funcs_map.put(ch,funcs_map.get(ch)+1);
+//                            } else {
+//                                funcs_map.put(ch,1);
+//                            }
+//                        }
+//                    });
+//
+//                }
+//			}
+//            List<ITree> resources_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Resources");
+//            resources_list.forEach(this::add_ressources);
+//		}
+//        for(ITree testfunc:testfunclistCopy){
+//            List<ITree> calls_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "call", "");
+//            ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
+//            String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();
+//            if(calls_list!=null && calls_list.size()>0)
+//            {
+//                for(ITree call : calls_list){
+//                    call.getChildren().forEach( ch -> {
+//                        if(ch.getType().toString().equalsIgnoreCase("name")){
+//                            for(ITree funcTree: funcs_map.keySet()){
+//                                if(funcs_map.get(funcTree) > 1) {
+//                                    if (sub_tree_matcher(ch,funcTree,false)) {
+//                                        LazyTest.put(classtestfunc,true);
+//                                    }
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//                    });
+//
+//                }
+//                List<ITree> resources_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Resources");
+//                for (ITree resource:resources_list){
+//                    if(test_ressources(resource)){
+//                        LazyTest.put(classtestfunc,true);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            if (!LazyTest.containsKey(classtestfunc)){
+//                LazyTest.put(classtestfunc,false);
+//            }
+//
+//        }
+//        if(ressources_paths.size() > 0)
+//            System.out.println(ressources_paths);
+//        return LazyTest;
+//
+//
+//	}
+public Map<String, Boolean> searchForLazyTest(ITree root) {
+    System.out.println("mapLazy22 rootIssue ==> " + root);
+
+    // Get the list of test functions
+    List<ITree> testfunclist = TreeNodeAnalyzer.getTestFunctionList(root);
+    System.out.println("mapLazy22 testfunclist ==> " + testfunclist.size());
+
+    // Map to store test functions and their lazy status
+    Map<String, Boolean> LazyTest = new HashMap<>();
+    ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
+
+    if (classnode == null) return LazyTest;
+
+    ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
+    String lowerclassname = classname.getLabel();
+
+    // Map to store which test methods call each production method
+    Map<String, Set<String>> funcCallTestFuncMap = new HashMap<>();
+
+    // Loop through test functions to track function calls
+    for (ITree testfunc : testfunclist) {
+        String testFuncName = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc).getLabel();
+
+        // Get the list of function calls within the test function
+        List<ITree> calls_list = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "call", "");
+        System.out.println("mapLazy22 callList ==> " + calls_list.size());
+
+        // Keep track of which functions are called in each test method
+        Set<String> calledFunctionsInTest = new HashSet<>();
+
+        for (ITree call : calls_list) {
+            ITree funcnameNode = SrcmlUnityCsMetaDataGenerator.getFuncName(call);
+            if (funcnameNode != null) {
+                String funcname = funcnameNode.getLabel();
+
+                // Track which test functions call this function
+                funcCallTestFuncMap.computeIfAbsent(funcname, k -> new HashSet<>()).add(testFuncName);
+
+                // Track the functions called within this particular test function
+                calledFunctionsInTest.add(funcname);
+            }
         }
-		Map<String,Boolean> LazyTest=new HashMap<>();
-		ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
+        List<ITree> resources_list = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Resources");
+        resources_list.forEach(this::add_ressources);
+    }
 
-		if(classnode==null)
-			return LazyTest;
+    // Mark lazy tests: check if the same function is called by more than one test function
+    for (ITree testfunc : testfunclist) {
+        ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
+        String classtestfunc = lowerclassname + Config.separatorStr + funcnamenode.getLabel();
 
-		ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
+        boolean isLazy = false;
+        List<ITree> calls_list = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "call", "");
 
-		String lowerclassname = classname.getLabel();
+        // Iterate through the calls in the current test function
+        for (ITree call : calls_list) {
+            ITree funcnameNode = SrcmlUnityCsMetaDataGenerator.getFuncName(call);
+            if (funcnameNode != null) {
+                String funcname = funcnameNode.getLabel();
 
-        Map<ITree,Integer> funcs_map = new HashMap<>();
-        for(ITree testfunc:testfunclist)
-		{
-			List<ITree> calls_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "call", "");
-//			ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
-//    		String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();
-			if(calls_list!=null && calls_list.size()>0)
-			{
-				for(ITree call : calls_list){
-                    call.getChildren().forEach( ch -> {
-                        if(ch.getType().toString().equalsIgnoreCase("name")){
-                            if (funcs_map.containsKey(ch)){
-                                funcs_map.put(ch,funcs_map.get(ch)+1);
-                            } else {
-                                funcs_map.put(ch,1);
-                            }
-                        }
-                    });
-
-                }
-			}
-            List<ITree> resources_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Resources");
-            resources_list.forEach(this::add_ressources);
-		}
-        for(ITree testfunc:testfunclistCopy){
-            List<ITree> calls_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "call", "");
-            ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
-            String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();
-            if(calls_list!=null && calls_list.size()>0)
-            {
-                for(ITree call : calls_list){
-                    call.getChildren().forEach( ch -> {
-                        if(ch.getType().toString().equalsIgnoreCase("name")){
-                            for(ITree funcTree: funcs_map.keySet()){
-                                if(funcs_map.get(funcTree) > 1) {
-                                    if (sub_tree_matcher(ch,funcTree,false)) {
-                                        LazyTest.put(classtestfunc,true);
-                                    }
-
-                                }
-
-                            }
-
-                        }
-                    });
-
-                }
-                List<ITree> resources_list=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Resources");
-                for (ITree resource:resources_list){
-                    if(test_ressources(resource)){
-                        LazyTest.put(classtestfunc,true);
-                        break;
-                    }
+                // Check if the same production function is called across multiple test functions
+                Set<String> callingTestFuncs = funcCallTestFuncMap.get(funcname);
+                if (callingTestFuncs != null && callingTestFuncs.size() > 1) {
+                    isLazy = true;  // Mark as lazy if the function is called across multiple test functions
+                    break;
                 }
             }
-
-            if (!LazyTest.containsKey(classtestfunc)){
-                LazyTest.put(classtestfunc,false);
-            }
-
         }
-        if(ressources_paths.size() > 0)
-            System.out.println(ressources_paths);
-        return LazyTest;
+
+        LazyTest.put(classtestfunc, isLazy);  // Update map with lazy status for the test
+    }
+
+    if (ressources_paths.size() > 0)
+        System.out.println(ressources_paths);
+
+    return LazyTest;
+}
 
 
-	}
 
-
-
-
-	public double getLazyTestStats(Map<String,Boolean> testfuncconditionalTestmap)
+    public double getLazyTestStats(Map<String,Boolean> testfuncconditionalTestmap)
 	{
 
         int total=testfuncconditionalTestmap.keySet().size();

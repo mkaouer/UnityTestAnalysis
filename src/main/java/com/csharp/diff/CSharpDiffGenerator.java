@@ -20,7 +20,7 @@ import com.github.gumtreediff.actions.model.Move;
 import com.github.gumtreediff.actions.model.TreeDelete;
 import com.github.gumtreediff.actions.model.TreeInsert;
 import com.github.gumtreediff.actions.model.Update;
-import com.github.gumtreediff.gen.srcml.SrcmlCsTreeGenerator;
+//import com.github.gumtreediff.gen.srcml.SrcmlCsTreeGenerator;
 import com.github.gumtreediff.matchers.MappingStore;
 import com.github.gumtreediff.matchers.Matcher;
 import com.github.gumtreediff.matchers.Matchers;

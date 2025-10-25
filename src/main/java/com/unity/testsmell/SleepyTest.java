@@ -4,6 +4,7 @@ package com.unity.testsmell;
 import com.config.Config;
 import com.csharp.astgenerator.SrcmlUnityCsMetaDataGenerator;
 import com.github.gumtreediff.tree.ITree;
+import com.utility.ProjectPropertyAnalyzer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,57 +19,202 @@ public class SleepyTest {
 
     }
 
-    public Map<String,Boolean> searchForSleepyTest(ITree root)
-    {
-        List<ITree> testfunclist=TreeNodeAnalyzer.getTestFunctionList(root);
-        Map<String,Boolean> sleepyTest=new HashMap<>();
+//    public Map<String,Boolean> searchForSleepyTest(ITree root)
+//    {
+//        List<ITree> testfunclist=TreeNodeAnalyzer.getTestFunctionList(root);
+//        Map<String,Boolean> sleepyTest=new HashMap<>();
+//        ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
+//
+//        if(classnode==null)
+//            return sleepyTest;
+//
+//        ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
+//
+//        String lowerclassname = classname.getLabel();
+//
+//
+//        for(ITree testfunc:testfunclist)
+//        {
+//            List<ITree> sleepylist=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Thread");
+//            ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
+//            String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();
+//
+//
+//            if(sleepylist!=null && sleepylist.size()>0)
+//            {
+//                sleepFound = SleepFound(sleepylist);
+//            }
+//
+//            sleepyTest.put(classtestfunc,sleepFound);
+//
+//
+//
+//
+//
+//        }
+//
+//
+//        return sleepyTest;
+//
+//
+//    }
+
+//    public Map<String, Boolean> searchForSleepyTest(ITree root) {
+//        List<ITree> testfunclist = TreeNodeAnalyzer.getTestFunctionList(root);
+//        Map<String, Boolean> sleepyTest = new HashMap<>();
+//        ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
+//
+//        if (classnode == null) return sleepyTest;
+//
+//        ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
+//        String lowerclassname = classname.getLabel();
+//
+//        for (ITree testfunc : testfunclist) {
+//            // Search for the 'Thread' class
+//            List<ITree> threadlist = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Thread");
+//            System.out.println("thread list=>"+threadlist);
+//            System.out.println("thread list size=>"+threadlist.size());
+//            ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
+//            System.out.println("function node=>"+funcnamenode.getLabel());
+//            String classtestfunc = lowerclassname + Config.separatorStr + funcnamenode.getLabel();
+//
+//            boolean sleepFound = false;
+//
+//            if(threadlist!=null && threadlist.size()>0)
+//            {
+//                sleepFound = SleepFound(threadlist);
+//            }
+//
+//            sleepyTest.put(classtestfunc, sleepFound);
+//        }
+//
+//        return sleepyTest;
+//    }
+//
+//
+//    private boolean SleepFound(List<ITree>foundList) {
+//        System.out.println("foundList=>"+foundList);
+//        boolean isfound = false;
+//
+//        for (ITree sleep : foundList) {
+//            System.out.println("sleep=>"+sleep.getLabel());
+//            if(sleep.getLabel().contains("sleep")) {
+//                isfound = true;
+//            }
+//            else{
+//                isfound = false;
+//            }
+//        }
+//        System.out.println("isfound=>"+isfound);
+//        return isfound;
+//    }
+
+    public Map<String, Boolean> searchForSleepyTest(ITree root) {
+        List<ITree> testfunclist = TreeNodeAnalyzer.getTestFunctionList(root);
+
+
+
+
+        Map<String, Boolean> sleepyAndAfterTest = new HashMap<>();
         ITree classnode = SrcmlUnityCsMetaDataGenerator.breadthFirstSearchForNode(root, "class", "c1");
 
-        if(classnode==null)
-            return sleepyTest;
+        if (classnode == null) return sleepyAndAfterTest;
 
         ITree classname = SrcmlUnityCsMetaDataGenerator.getClassName(classnode);
-
         String lowerclassname = classname.getLabel();
 
+        for (ITree testfunc : testfunclist) {
+            // Search for the 'Thread' class
+            List<ITree> threadlist = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "Thread");
+            // Search for the 'After' method
+            List<ITree> afterList = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "After");
 
-        for(ITree testfunc:testfunclist)
-        {
-            List<ITree> sleepylist=TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "thread");
+            List<ITree> waitList = TreeNodeAnalyzer.getSearchTypeLabel(testfunc, "name", "WaitForSeconds");
+
+
+//            System.out.println("SIZEEEEEEEEEEEEE ---> " + threadlist.size() + "-->" + afterList.size() + "-->" + waitList.size());
+            ProjectPropertyAnalyzer.writeLog("SIZEEEEEEEEEEEEE ---> " + threadlist.size() + "-->" + afterList.size() + "-->" + waitList.size());
+//            for (int i = 0;i<testfunclist.size();i++){
+//                System.out.println("TestFunctionListCheck =====>> " + testfunclist.get(i)  + "\n");
+//            }
+
             ITree funcnamenode = SrcmlUnityCsMetaDataGenerator.getFuncName(testfunc);
-            String classtestfunc=lowerclassname+Config.separatorStr+funcnamenode.getLabel();
+            String classtestfunc = lowerclassname + Config.separatorStr + funcnamenode.getLabel();
 
+            boolean sleepFound = false;
+            boolean afterSecondsFound = false;
 
-            if(sleepylist!=null && sleepylist.size()>0)
-            {
-                sleepFound = SleepFound(sleepylist);
+            // Check if 'Thread.sleep()' is found
+            if (threadlist != null && threadlist.size() > 0) {
+                sleepFound = checkThreadSleep(threadlist);
             }
 
-            sleepyTest.put(classtestfunc,sleepFound);
+            // Check if 'After(x).Seconds' is found
+            if (afterList != null && afterList.size() > 0) {
+                afterSecondsFound = checkAfterSeconds(afterList);
+            }
 
-
-
-
-
+            // Combine both results, if either is found, mark as true
+            sleepyAndAfterTest.put(classtestfunc, sleepFound || afterSecondsFound);
         }
 
-
-        return sleepyTest;
-
-
+        return sleepyAndAfterTest;
     }
 
-    private boolean SleepFound(List<ITree>foundList) {
+    private boolean checkThreadSleep(List<ITree> foundList) {
         boolean isfound = false;
 
-        for (ITree sleep : foundList) {
-            if(sleep.getLabel().contains("Sleep")) {
-                isfound = true;
-            }
-            else{
-                isfound = false;
+        for (ITree threadNode : foundList) {
+            List<ITree> siblings = threadNode.getParent().getChildren();
+            for (int i = 0; i < siblings.size(); i++) {
+                if (siblings.get(i).equals(threadNode)) {
+                    // Check if next sibling is '.' and the one after that is 'sleep'
+                    if (i + 2 < siblings.size()) {
+                        ITree nextNode = siblings.get(i + 1);
+                        ITree sleepNode = siblings.get(i + 2);
+
+                        if (".".equals(nextNode.getLabel()) && "sleep".equals(sleepNode.getLabel())) {
+                            isfound = true;
+                            break;
+                        }
+                    }
+                }
             }
         }
+
+        return isfound;
+    }
+
+    private boolean checkAfterSeconds(List<ITree> foundList) {
+        boolean isfound = false;
+
+        // Traverse through the nodes where 'After' is found
+        for (ITree afterNode : foundList) {
+            List<ITree> siblings = afterNode.getParent().getChildren();
+            for (int i = 0; i < siblings.size(); i++) {
+                if (siblings.get(i).equals(afterNode)) {
+                    // Check if the next sibling is the argument list and then the '.' operator
+                    if (i + 2 < siblings.size()) {
+                        ITree argumentListNode = siblings.get(i + 1); // The argument list After(4)
+                        ITree dotOperatorNode = siblings.get(i + 2);  // The '.' operator
+
+                        // Verify argument list and dot operator are present
+                        if (".".equals(dotOperatorNode.getLabel())) {
+                            // Check if the next sibling is 'Seconds'
+                            if (i + 3 < siblings.size()) {
+                                ITree secondsNode = siblings.get(i + 3);
+                                if ("Seconds".equals(secondsNode.getLabel())) {
+                                    System.out.println("Found After(x).Seconds call");
+                                    isfound = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return isfound;
     }
 

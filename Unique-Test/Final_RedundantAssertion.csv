@@ -1,0 +1,5 @@
+Project Name,Test Function,Smell Type
+ExtendRealityLtd@Zinnia.Unity,RigidbodyVelocityTest<>ModifyAndDiverge,RedundantAssertion
+Innoactive@Creator,TrainingBuilderTests<>BuildingIntroTest,RedundantAssertion
+ExtendRealityLtd@Zinnia.Unity,RigidbodyVelocityTest<>ModifyWithOffsetAndDiverge,RedundantAssertion
+SMBenedict173@General-Anesthesia-Simulator,CanvasScalerWithChildTextObjectDoesNotCrash<>CanvasScalerWithChildTextObjectWithTextFontDoesNotCrash,RedundantAssertion

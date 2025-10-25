@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.csharp.astgenerator.SrcmlUnityCsMetaDataGenerator;
 import com.github.gumtreediff.tree.ITree;
+import com.utility.ProjectPropertyAnalyzer;
 
 public class TreeNodeAnalyzer {
 
@@ -94,9 +95,10 @@ public class TreeNodeAnalyzer {
     }
 
     public static List<ITree> getTestFunctionList(ITree node) {
-
+//        System.out.println("node 11 ==> " + node);
         ITree copynode = node.deepCopy();
         List<ITree> testfunclist = new ArrayList<>();
+//        System.out.println("copynode 112==> " + copynode);
         List<ITree> funclist = breadthFirstSearchForNodeList(copynode, "function", "func");
        // List<ITree> constructorlist = breadthFirstSearchForNodeList(copynode, "constructor", "func");
 
@@ -105,9 +107,13 @@ public class TreeNodeAnalyzer {
 
             List<ITree> attributes = breadthFirstSearchForNodeList(func, "attribute", "an1");
 
+//            System.out.println("mapLazy22 attributes ==> " + attributes.size());
+
             if (attributes != null && attributes.size() > 0) {
                 List<ITree> unitytestanotations = breadthFirstSearchForLabel(attributes.get(0), "UnityTest", "an2");
                 List<ITree> testanotations = breadthFirstSearchForLabel(attributes.get(0), "Test", "an3");
+
+//                System.out.println("mapLazy22 testanotations ==> " + testanotations.size());
                 List<ITree> mtestanotations = breadthFirstSearchForLabel(attributes.get(0), "MTest", "an4");
                 List<ITree> testFixture = breadthFirstSearchForLabel(attributes.get(0), "Fixture", "an5");
                 //System.out.println("test");
@@ -115,6 +121,7 @@ public class TreeNodeAnalyzer {
                 if (unitytestanotations != null && unitytestanotations.size() > 0) {
                     testfunclist.add(func);
                 } else if (testanotations != null && testanotations.size() > 0) {
+//                    System.out.println("mapLazy22 testanotations func ==> " + func);
                     testfunclist.add(func);
                 }
                 else if (mtestanotations != null && mtestanotations.size() > 0) {
@@ -232,6 +239,8 @@ public class TreeNodeAnalyzer {
 
 //            nodelist.add(currentFirst);
 
+    //        System.out.println("mapLazy22 currentFirstMethodNullCheck ==> " + currentFirst.getMetadata(nodevisitedflag).toString());
+
             if (currentFirst.getMetadata(nodevisitedflag) != null)
                 continue;
 
@@ -240,6 +249,8 @@ public class TreeNodeAnalyzer {
             // System.out.print(currentFirst.name + " ");
 
             List<ITree> allNeighbors = currentFirst.getChildren();
+
+//            System.out.println("mapLazy22 allNeighbors ==> " + allNeighbors.size());
 
             // We have to check whether the list of neighbors is null before proceeding,
             // otherwise
@@ -254,6 +265,10 @@ public class TreeNodeAnalyzer {
                 }
             }
         }
+
+//        System.out.println("mapLazy22 nodelist ==> " + nodelist.size());
+
+
         return nodelist;
     }
 
@@ -329,6 +344,13 @@ public class TreeNodeAnalyzer {
             // actually visiting that node, so we make sure to check and skip that node if
             // we have
             // encountered it before
+//            System.out.println("Visiting node:");
+//            System.out.println("Label: " + currentFirst.getLabel());
+//            System.out.println("Type: " + currentFirst.getType().toString());
+
+//           System.out.println("CurrentFirstGetTpeNodeeee ===> "+ currentFirst.getType().toString());
+            ProjectPropertyAnalyzer.writeLog("The function Label Is : " + currentFirst.getLabel().toLowerCase() + "And the Label Is :" + label);
+            ProjectPropertyAnalyzer.writeLog("\"=================================\"");
 
             if (currentFirst.getType().toString().toLowerCase().equals("switch")) {
                 System.out.println(currentFirst.getLabel().toLowerCase());
@@ -337,6 +359,8 @@ public class TreeNodeAnalyzer {
             if (currentFirst.getLabel().toLowerCase().equals(label) && currentFirst.getType().toString().toLowerCase().equals(type)) {
                 nodelist.add(currentFirst);
                 //classnode = currentFirst;
+//                System.out.println("Match found: " + currentFirst.getLabel());
+//            }
             }
 
             if (currentFirst.getMetadata(nodevisitedmeta) != null)
@@ -363,6 +387,57 @@ public class TreeNodeAnalyzer {
         }
         return nodelist;
     }
+
+//    private static List<ITree> breadthFirstSearchForTypeLabel(ITree node, String type, String label, String nodevisitedmeta) {
+//        // Just so we handle receiving an uninitialized Node
+//        List<ITree> nodelist = new ArrayList<>();
+//        if (node == null)
+//            return null;
+//
+//        // Creating the queue, and adding the first node (step 1)
+//        LinkedList<ITree> queue = new LinkedList<>();
+//        queue.add(node);
+//
+//        while (!queue.isEmpty()) {
+//            ITree currentFirst = queue.removeFirst();
+//
+//            // Debugging: Print current node type and label
+//            System.out.println("Visiting node:");
+//            System.out.println("Label: " + currentFirst.getLabel());
+//            System.out.println("Type: " + currentFirst.getType().toString());
+//               if (currentFirst.getType().toString().toLowerCase().equals("switch")) {
+//                   System.out.println(currentFirst.getLabel().toLowerCase());
+//               }
+//
+//            // Check if the current node matches the label and type
+//            if (currentFirst.getLabel().toLowerCase().equals(label.toLowerCase()) &&
+//                    currentFirst.getType().toString().toLowerCase().equals(type.toLowerCase())) {
+//                nodelist.add(currentFirst);
+//                System.out.println("Match found: " + currentFirst.getLabel());
+//            }
+//
+//            // If the node was already visited, skip it
+//            if (currentFirst.getMetadata(nodevisitedmeta) != null)
+//                continue;
+//
+//            // Mark the node as visited
+//            currentFirst.setMetadata(nodevisitedmeta, 1);
+//
+//            // Get the list of neighbors/children of the current node
+//            List<ITree> allNeighbors = currentFirst.getChildren();
+//
+//            if (allNeighbors == null)
+//                continue;
+//
+//            for (ITree neighbor : allNeighbors) {
+//                // Only add unvisited neighbors
+//                if (neighbor.getMetadata(nodevisitedmeta) == null) {
+//                    queue.add(neighbor);
+//                }
+//            }
+//        }
+//        return nodelist;
+//    }
 
 
 }

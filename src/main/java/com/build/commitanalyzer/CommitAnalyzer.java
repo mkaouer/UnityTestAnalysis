@@ -13,6 +13,7 @@ import java.util.Map;
 //import org.apache.commons.compress.utils.IOUtils;
 import com.unity.testanalysis.FunctionalCodeLOCExtractor;
 import com.unity.testsmell.*;
+import com.utility.ProjectPropertyAnalyzer;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -128,7 +129,7 @@ public class CommitAnalyzer {
         this.projectOwner = projectOwner;
         this.project = project;
 
-        directoryPath =  Config.repoDir +projectOwner+"/"+ project + "/.git";
+        directoryPath =  Config.repoDir +projectOwner+"@"+ project + "/.git";
 
         commitAnalyzingUtils = new CommitAnalyzingUtils();
         statsHolder = new DataStatsHolder();
@@ -459,9 +460,9 @@ public class CommitAnalyzer {
     }
 
     public String getHeadCommitID() {
-        System.out.println("Assert Roulette headCheckCount ==> " + repository.getAllRefs().size());
+        System.out.println("headCheckCount ==> " + repository.getAllRefs().size());
         Ref head = repository.getAllRefs().get("HEAD");
-        System.out.println("Assert Roulette headCheck ==> " + head + "ObjectID => " + head.getObjectId() + "Name => " + head.getObjectId().getName()  );
+//        System.out.println("headCheck ==> " + head + "ObjectID => " + head.getObjectId() + "Name => " + head.getObjectId().getName()  );
         return head.getObjectId().getName();
     }
 
@@ -853,11 +854,11 @@ public class CommitAnalyzer {
 
             while (treeWalk.next()) {
                 // System.out.println("found:" + treeWalk.getPathString());
-//				System.out.println(treeWalk.getPathString()+"*****");
+				System.out.println(treeWalk.getPathString()+"*****");
                 if (treeWalk.isSubtree()) {
                     // System.out.println("dir: " + treeWalk.getPathString());
                     treeWalk.enterSubtree();
-                } else if (treeWalk.getPathString().endsWith(".cs")) {
+                } else if (treeWalk.getPathString().endsWith(".cs")&& treeWalk.getPathString().contains("Test")) {
 
                     ObjectId objectId = treeWalk.getObjectId(0);
                     ObjectLoader loader = repository.open(objectId);
@@ -867,6 +868,7 @@ public class CommitAnalyzer {
 
                     byte[] butestr = loader.getBytes();
                     String str = new String(butestr);
+//                    System.out.println("str g1.cs:=> "+ str);
                     File f1 = commitAnalyzingUtils.writeContentInFile("g1.cs", str);
 
 
@@ -879,12 +881,17 @@ public class CommitAnalyzer {
 //							System.out.print("debug");
 //						}
                         reader = new FileReader(f1.toString());
+//                        System.out.println("mapLazy22 reader ==> " + reader);
                         ITree curtree = (ITree) new SrcmlUnityCsTreeGenerator().generate(reader).getRoot();
+
+//                        System.out.println("mapLazy22 curtree ==> " + curtree);
 
                         //TreeNodeAnalyzer analyzer=new TreeNodeAnalyzer();
                         //analyzer.getTestFunctionList(curtree);
                         LazyTest lt = new LazyTest();
                         map = lt.searchForLazyTest(curtree);
+
+//                        System.out.println("mapLazy22 ==> " + map.toString());
 //                        System.out.println(map.size());
 //                        System.out.println(map);
                         //Copy to project map
@@ -897,8 +904,10 @@ public class CommitAnalyzer {
                         }
 
                     } catch (IOException e) {
+//                        System.out.println("mapLazy22 exceptionGetLazyTest ==> " + e.getMessage());
                         // TODO Auto-generated catch block
                         e.printStackTrace();
+
                     }
 
 
@@ -1632,7 +1641,7 @@ public class CommitAnalyzer {
             ObjectId objectid = repository.resolve(commitid);
             RevCommit commit = rw.parseCommit(objectid);
 
-            RevTree tree = commit.getTree();
+            RevTree tree = (commit.getTree());
 
             // TreeWalk treeWalk = new TreeWalk(repository);
             // treeWalk.addTree(tree);
@@ -1640,19 +1649,20 @@ public class CommitAnalyzer {
             // treeWalk.setPostOrderTraversal(false);
 
             TreeWalk treeWalk = new TreeWalk(repository);
-            treeWalk.addTree(commit.getTree());
+            treeWalk.addTree(tree);
             treeWalk.setRecursive(false);
 
             // treeWalk.setRecursive(true);
 
             while (treeWalk.next()) {
                 // System.out.println("found:" + treeWalk.getPathString());
-//				System.out.println(treeWalk.getPathString()+"*****");
+				System.out.println(treeWalk.getPathString()+"*****");
                 if (treeWalk.isSubtree()) {
                     // System.out.println("dir: " + treeWalk.getPathString());
                     treeWalk.enterSubtree();
-                } else if (treeWalk.getPathString().endsWith(".cs")) {
-
+                } else if (treeWalk.getPathString().toLowerCase().contains("test") && treeWalk.getPathString().endsWith(".cs")
+                ){
+//                    System.out.println("CurrentCSTESTPATH ===> "+ treeWalk.getPathString());
                     ObjectId objectId = treeWalk.getObjectId(0);
                     ObjectLoader loader = repository.open(objectId);
 
@@ -1661,8 +1671,13 @@ public class CommitAnalyzer {
 
                     byte[] butestr = loader.getBytes();
                     String str = new String(butestr);
+//                    System.out.println("str g1.cs:=> "+ str);
                     File f1 = commitAnalyzingUtils.writeContentInFile("g1.cs", str);
 
+                    System.out.println("CurrentCSTESTPATHFile ===> "+ str);
+                    ProjectPropertyAnalyzer.writeLog("CurrentCSTESTPATHFile ===> "+ str);
+//                    System.out.println("=================================");
+                    ProjectPropertyAnalyzer.writeLog("=================================");
 
                     Reader reader;
                     try {
@@ -1705,6 +1720,7 @@ public class CommitAnalyzer {
             treeWalk.reset();
 
         } catch (Exception ex) {
+//            System.out.println("TreeCheckkkk"+ ex.getMessage());
             System.out.print(ex.getMessage());
         }
 //        System.out.println(projtestfuncassertmap);
@@ -2074,6 +2090,8 @@ public class CommitAnalyzer {
 
             RevTree tree = commit.getTree();
 
+            System.out.println("RevTree==> "+ tree);
+
             // TreeWalk treeWalk = new TreeWalk(repository);
             // treeWalk.addTree(tree);
             // treeWalk.setRecursive(false);
@@ -2087,7 +2105,7 @@ public class CommitAnalyzer {
 
             while (treeWalk.next()) {
                 // System.out.println("found:" + treeWalk.getPathString());
-//				System.out.println(treeWalk.getPathString()+"*****");
+//    			System.out.println(treeWalk.getPathString()+"*****");
                 if (treeWalk.isSubtree()) {
                     // System.out.println("dir: " + treeWalk.getPathString());
                     treeWalk.enterSubtree();

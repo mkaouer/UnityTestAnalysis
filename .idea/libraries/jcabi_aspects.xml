@@ -2,11 +2,11 @@
   <library name="jcabi.aspects" type="repository">
     <properties maven-id="com.jcabi:jcabi-aspects:0.18" />
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/jcabi-aspects-0.18.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/jcabi-log-0.15.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.5.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/aspectjrt-1.8.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/validation-api-1.1.0.Final.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jcabi/jcabi-aspects/0.18/jcabi-aspects-0.18.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jcabi/jcabi-log/0.15/jcabi-log-0.15.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/aspectj/aspectjrt/1.8.2/aspectjrt-1.8.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/validation/validation-api/1.1.0.Final/validation-api-1.1.0.Final.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
